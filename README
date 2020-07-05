@@ -7,7 +7,8 @@ project     : EpidPy (epidemic modelling in python)
 
 Codes for modelling epidemics using compartment models (eg SIR) and fitting parameters (solving) using nonlinear least squares objective function
 
-Supported modelling types:
+Supported compartment model types:
+
     sir        : susceptible, infected ,            recovered
     seir       : susceptible, exposed  , infected , recovered
     sirs       : susceptible, infected ,            recovered, susceptible 
@@ -25,14 +26,14 @@ SIR solver:
     
     Least squares fitting by finding x which minimizes the objective function 
     
-        obj(x)=|W( S*sir_fx(x) -d )|_2^2
+        obj(x) = | W ( S*sir_fx(x) - d ) |_2^2
 
-with
+    with
 
-x      : model space from sir_modeller.py
-d      : data to fit
-sir_fx : (sirmod) sir modelling operator function from x to sir compartments
-S      : (sampler) sampling function (sampler.py) from sir compartments to space of d
-W      : (wts) diagonal matrix - weighting function of time samples       
+        x      : model space from sir_modeller.py
+        d      : data to fit
+        sir_fx : sir compartment model, function from x to sir compartments
+        S      : sampling function from sir compartments to space of d
+        W      : diagonal matrix - weighting function of time samples       
 """
 
