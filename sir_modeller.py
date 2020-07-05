@@ -4,7 +4,7 @@
 description : Wrapper for SIR modelling modes 
 author      : bveitch
 version     : 1.0
-project     : EpiPy (epidemic modelling in python)
+project     : EpidPy (epidemic modelling in python)
 
 Supported modelling types:
     sir        : susceptible, infected ,            recovered
