@@ -12,6 +12,9 @@ project     : EpidPy (epidemic modelling in python)
 
 import matplotlib.pyplot as plt
 import sir_sampler as samplr
+import numpy as np
+import networkx as nx
+import matplotlib.animation as animation
 
 linestyles=[':','-.','--','-']
 colors1  =['b','r','g','c','m','k']
@@ -149,3 +152,94 @@ def plot_fit(t,d_dict,sir_type,fm_dict,title=None,fname=None):
     plt.show()
     if(fname is not None):  
         plt.savefig(fname)
+
+def movie_maker_network(G,It,nt):        
+    fig, ax = plt.subplots(figsize=(8,5))
+
+    Writer = animation.writers['ffmpeg']
+    ffwriter = Writer(fps=15, metadata=dict(artist='Me'), bitrate=1800, codec='mpeg4')
+ 
+    with ffwriter.saving(fig, "graph_epid_ITotal_test.mp4", 200):
+        for it in range(nt):
+            ax.clear()
+
+        # Background nodes
+        nx.draw_shell(G,with_labels=True, font_weight='bold',node_size=1000*It[it,:] )
+
+        # Scale plot ax
+        ax.set_title("Timestep %d:    "%(it), fontweight="bold")
+        ax.set_xticks([])
+        ax.set_yticks([])
+        ffwriter.grab_frame()
+ 
+#Network plotting utils
+        
+def data_network_to_sir(sirtype,data,nvertices):
+        
+        def get_ncomponents_from_type():
+            ncomps = {
+            'sir'        : 3,
+            'seir'       : 4,
+            'sirs'       : 3
+            }
+            ncomp = ncomps.get(sirtype, lambda: "Invalid modelling type")
+            return ncomp
+        
+        [nt,nn]=data.shape
+        nc=get_ncomponents_from_type()
+        assert(nn == nc*nvertices),'data dimension 1 must match ncompartments * nvertices'
+        sirdata=data.reshape((nt,nc,nvertices))
+        sirlist=[]
+        for j in range(nc):
+            sirlist.append(sirdata[:,j,:])
+        return sirlist
+    
+def plot_sirdata_for_node(sirtype,tt,sirdata,ivertex=None):
+  
+    fig, ax = plt.subplots(figsize=(18,10))
+    ax.set_title(" {:} epidemic on node {:}".format(sirtype.upper(),ivertex))
+    ax.set_xlabel('days') 
+    ax.set_ylabel('Incidence per unit Population')
+    
+    labels = list(sirtype)
+    ic=0
+    for data in sirdata:
+            
+            if(ivertex is None):
+                d_plot=np.sum(data,axis=1)
+            else:
+                d_plot=data[:,ivertex]
+                
+            lstyle=linestyles[ic%len(linestyles)] 
+            col=colors1[ic %len(colors1)] 
+            mrk=markers1[ic % len(markers1)]
+            label=labels[ic]
+            ax.plot(tt, d_plot, lstyle ,color=col, marker=mrk,label=label)
+            ic+=1
+       
+    ax.legend(loc='upper right',shadow=True)  
+    plt.show()      
+    
+def plot_nodedata_for_compartment(tt,sirtype,sirdata,comp='i'):     
+    
+    icomp=sirtype.find(comp)
+    assert(icomp >=0 ),'compartment name not in modelling type' 
+    assert(icomp < len(sirtype) ),'compartment index must be less than {:}'.format(len(sirtype)) 
+    compartment_data=sirdata[icomp]
+    [nt,nv]=compartment_data.shape
+    fig, ax=plt.subplots(1,1,squeeze=False, figsize=(18,10))
+    ax[0][0].set_title("{:}: Compartment {:} over all nodes".format(sirtype.upper(),comp.upper()))
+    ax[0][0].set_xlabel('days') 
+    ax[0][0].set_ylabel('Incidence per unit Population')
+    for iv in range(nv):
+        dat= compartment_data[:,iv]
+        
+        labelstr='node:'+str(iv)
+        lstyle=linestyles[iv%len(linestyles)] 
+        col=colors1[iv%len(colors1)]
+        mark=markers1[iv%len(markers1)]
+        ax[0][0].plot(tt, dat, lstyle ,color=col, marker=mark,label=labelstr)
+            
+    ax[0][0].legend(loc='center right',shadow=True)
+    plt.show() 
+    

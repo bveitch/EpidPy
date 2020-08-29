@@ -14,9 +14,9 @@ Supported modelling types:
     sir_nstage : susceptible, infected (n stages) , recovered
 """
 
-import numpy as np;
+import numpy as np
 import math
-import sir_update as sirup;
+import sir_update as sirup
 from functools import partial
 
 def check_nan(sir):
