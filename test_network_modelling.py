@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-description : Run and test sir_modeller
+description : Run and test sir_network_modeller
 author      : bveitch
 version     : 1.0
 project     : EpidPy (epidemic modelling in python)

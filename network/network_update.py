@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-description : Provides nonlinear operators, and Jacobians for SIR updates. Wrapped into sir_modeller 
+description : Provides nonlinear operators for SIR updates on networks. Wrapped into sir_network_modeller 
 author      : bveitch
 version     : 1.0
 project     : EpiPy (epidemic modelling in python)
