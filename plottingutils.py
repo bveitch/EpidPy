@@ -194,7 +194,7 @@ def data_network_to_sir(sirtype,data,nvertices):
             sirlist.append(sirdata[:,j,:])
         return sirlist
     
-def plot_sirdata_for_node(sirtype,tt,sirdata,ivertex=None):
+def plot_sirdata_for_node(sirtype,tt,sirdata,ivertex=None,fname=None):
   
     fig, ax = plt.subplots(figsize=(18,10))
     ax.set_title(" {:} epidemic on node {:}".format(sirtype.upper(),ivertex))
@@ -219,8 +219,10 @@ def plot_sirdata_for_node(sirtype,tt,sirdata,ivertex=None):
        
     ax.legend(loc='upper right',shadow=True)  
     plt.show()      
-    
-def plot_nodedata_for_compartment(tt,sirtype,sirdata,comp='i'):     
+    if(fname is not None):  
+        plt.savefig(fname)
+        
+def plot_nodedata_for_compartment(tt,sirtype,sirdata,comp='i',fname=None):     
     
     icomp=sirtype.find(comp)
     assert(icomp >=0 ),'compartment name not in modelling type' 
@@ -242,4 +244,5 @@ def plot_nodedata_for_compartment(tt,sirtype,sirdata,comp='i'):
             
     ax[0][0].legend(loc='center right',shadow=True)
     plt.show() 
-    
+    if(fname is not None):  
+        plt.savefig(fname)

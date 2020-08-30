@@ -1,0 +1,26 @@
+
+"""
+description : Readme
+author      : bveitch
+version     : 1.0
+project     : EpidPy/Network (epidemic modelling in python)
+
+Codes for modelling epidemics on networks using compartment models (eg SIR) 
+
+Supported compartment model types:
+
+    sir        : susceptible, infected ,            recovered
+    seir       : susceptible, exposed  , infected , recovered
+    sirs       : susceptible, infected ,            recovered, susceptible 
+    
+SIR Modelling: 
+    
+    Deterministic - Numerical solution of nonlinear ode with Euler explicit step with Graph Laplacian, L, providing diffusion of infected class around network.
+					Variable diffusivity at edge, or reactivity at vertex not considered.
+
+                     sir model parameters   = x
+         d_t (sir compartments on node i )  = f(sir compartments on node i, x)
+		 d_t (i compartment for all nodes) += diffusivity*L*(i compartment for all nodes)
+            
+"""
+
