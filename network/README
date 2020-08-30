@@ -20,7 +20,7 @@ SIR Modelling:
 
                      sir model parameters   = x
          d_t (sir compartments on node i )  = f(sir compartments on node i, x)
-		 d_t (i compartment for all nodes) += diffusivity*L*(i compartment for all nodes)
+	 d_t (i compartment for all nodes) += diffusivity*L*(i compartment for all nodes)
             
 """
 
