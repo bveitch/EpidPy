@@ -68,4 +68,5 @@ for sir_type in sir_types:
         print("... Check! {:} sum test has failed".format(sir_type))
     plotter.plot_sirdata_for_node(sir_type,t,sirdata)
     plotter.plot_nodedata_for_compartment(t,sir_type,sirdata)
-#    plotter.movie_maker_network(G,sirdata[1],nt)
+    #movie maker is slow:
+    plotter.movie_maker_network(G,sir_type,sirdata,200,comp='i')

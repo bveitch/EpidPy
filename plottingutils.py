@@ -11,6 +11,7 @@ project     : EpidPy (epidemic modelling in python)
 """
 
 import matplotlib.pyplot as plt
+import numpy as np
 import sir_sampler as samplr
 import numpy as np
 import networkx as nx
@@ -153,24 +154,7 @@ def plot_fit(t,d_dict,sir_type,fm_dict,title=None,fname=None):
     if(fname is not None):  
         plt.savefig(fname)
 
-def movie_maker_network(G,It,nt):        
-    fig, ax = plt.subplots(figsize=(8,5))
 
-    Writer = animation.writers['ffmpeg']
-    ffwriter = Writer(fps=15, metadata=dict(artist='Me'), bitrate=1800, codec='mpeg4')
- 
-    with ffwriter.saving(fig, "graph_epid_ITotal_test.mp4", 200):
-        for it in range(nt):
-            ax.clear()
-
-        # Background nodes
-        nx.draw_shell(G,with_labels=True, font_weight='bold',node_size=1000*It[it,:] )
-
-        # Scale plot ax
-        ax.set_title("Timestep %d:    "%(it), fontweight="bold")
-        ax.set_xticks([])
-        ax.set_yticks([])
-        ffwriter.grab_frame()
  
 #Network plotting utils
         
@@ -246,3 +230,41 @@ def plot_nodedata_for_compartment(tt,sirtype,sirdata,comp='i',fname=None):
     plt.show() 
     if(fname is not None):  
         plt.savefig(fname)
+        
+def movie_maker_network(Netw,sirtype,sirdata,nt,comp='i'): 
+    icomp=sirtype.find(comp)
+    assert(icomp >=0 ),'compartment name not in modelling type' 
+    assert(icomp < len(sirtype) ),'compartment index must be less than {:}'.format(len(sirtype)) 
+    
+    compartment_data=sirdata[icomp]
+    [ntot,nv]=compartment_data.shape 
+    assert(nv == len(Netw.V) ),'number of compartment nodes must match number of graph vertices'      
+  
+    fig, ax = plt.subplots(figsize=(8,5))
+
+    Writer = animation.writers['ffmpeg']
+    ffwriter = Writer(fps=15, metadata=dict(artist='Me'), bitrate=1800, codec='mpeg4')
+    G=nx.Graph()
+    
+    
+    for v in Netw.V:
+        G.add_node(v)
+    
+    for e in Netw.E:
+        G.add_edge(e[0],e[1])
+
+    Nt=min(nt,ntot)
+    fname="Epid_{:}_{:}_cases.mp4".format(sirtype.upper(),comp.upper())
+    with ffwriter.saving(fig, "movies/"+fname, Nt):
+        for it in range(Nt):
+            ax.clear()
+
+            # Background nodes
+            nx.draw_shell(G,with_labels=True, font_weight='bold',node_size=200*compartment_data[it,:])
+
+            # Scale plot ax
+            title="{:} Epidemic. {:} cases at timestep {:}:    ".format(sirtype.upper(),comp.upper(),it)
+            ax.set_title(title, fontweight="bold")
+            ax.set_xticks([])
+            ax.set_yticks([])
+            ffwriter.grab_frame()
