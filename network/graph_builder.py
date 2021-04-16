@@ -60,7 +60,7 @@ class Graph:
         invSc=np.diag(1./popcounts)
         return invSc.dot(L.dot(Sc))
     
-    def draw( self ):
+    def draw( self ,fname=None):
         plt.close()
         G=nx.Graph()
         for v in self.V:
@@ -74,8 +74,9 @@ class Graph:
         if(self.name is not None):
             plt.title(self.name)
         nx.draw_shell(G,with_labels=True, font_weight='bold')
-        plt.show()
-        plt.savefig("mygraph.png") 
+        plt.show() 
+        if(fname is not None):  
+            plt.savefig(fname) 
 
 
 def Empty(n):
